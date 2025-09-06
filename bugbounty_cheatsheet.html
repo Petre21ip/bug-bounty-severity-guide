@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bug Bounty Severity Guide - Part 1 (English)</title>
+<style>
+  body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; background-color: #f4f4f4; }
+  h2 { background-color: #333; color: #fff; padding: 10px; border-radius: 5px; }
+  .vuln { margin-bottom: 20px; padding: 10px; background-color: #fff; border-radius: 5px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+  .severity { display: flex; flex-direction: column; gap: 5px; margin-left: 20px; }
+  .sev { padding: 5px 10px; border-radius: 3px; color: #000; font-weight: bold; display: inline-block; width: fit-content; }
+  .informative { background-color: #ffffff; }
+  .low { background-color: #ffeb3b; }
+  .medium { background-color: #4caf50; color: #fff; }
+  .high { background-color: #2196f3; color: #fff; }
+  .critical { background-color: #9c27b0; color: #fff; }
+  .exploit { margin-top: 10px; padding: 10px; background-color: #ff4d4d; color: #fff; border-radius: 5px; font-style: italic; }
+</style>
+</head>
+<body>
+<h1>Bug Bounty Severity Guide - Full Reference (English)</h1>
+
+<div class="vuln">
+<h2>IDOR (Insecure Direct Object Reference)</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Public data accessible, no impact.</span>
+  <span class="sev low">🟨 Low: Access non-sensitive private data (avatar, descriptions).</span>
+  <span class="sev medium">🟩 Medium: Access personal data (email, phone).</span>
+  <span class="sev high">🟦 High: Modify another user's data via PUT/PATCH.</span>
+  <span class="sev critical">🟪 Critical: Delete/modify full resources (DELETE).</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check object IDs in URLs, JSON bodies, or parameters. Look for predictable numeric IDs or GUIDs. Common endpoints: `/user/{id}`, `/orders/{id}`, `/profile/{id}`. Test modification, access, or deletion of resources belonging to other users.
+</div>
+</div>
+
+<div class="vuln">
+<h2>LFI (Local File Inclusion)</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Error-based only, confirms vector.</span>
+  <span class="sev low">🟨 Low: Non-sensitive files (own logs).</span>
+  <span class="sev medium">🟩 Medium: Access `/etc/passwd`.</span>
+  <span class="sev high">🟦 High: Access config files with API keys / DB credentials.</span>
+  <span class="sev critical">🟪 Critical: LFI → RCE (log poisoning, PHP wrappers).</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check parameters like `file=`, `page=`, `template=`. Try null byte bypass, directory traversal (`../`). Look for error messages revealing paths. Often found in legacy PHP apps or poorly validated include mechanisms.
+</div>
+</div>
+
+<div class="vuln">
+<h2>RCE (Remote Code Execution)</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Error without execution.</span>
+  <span class="sev low">🟨 Low: Limited command execution, unclear output.</span>
+  <span class="sev medium">🟩 Medium: Commands with output (whoami, id).</span>
+  <span class="sev high">🟦 High: Read system files (`/etc/passwd`).</span>
+  <span class="sev critical">🟪 Critical: Reverse shell / full execution.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Look at input fields that interact with OS (file upload, ping, shell commands). Check unsanitized system calls. Webhooks, cron endpoints, and legacy scripts are common targets.
+</div>
+</div>
+
+<div class="vuln">
+<h2>SQL Injection</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Error messages only, confirm vector.</span>
+  <span class="sev low">🟨 Low: Blind SQLi, time-based, no data extracted.</span>
+  <span class="sev medium">🟩 Medium: Enumerate databases and tables.</span>
+  <span class="sev high">🟦 High: Extract sensitive data (usernames, emails).</span>
+  <span class="sev critical">🟪 Critical: Password hashes, write/delete data.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Test parameters like `id=`, `search=`, `filter=`. Use error-based, union-based, and time-based payloads. Tools: sqlmap, manual payloads. Common endpoints: login, search, reports, filters.
+</div>
+</div>
+
+<div class="vuln">
+<h2>XSS (Cross-Site Scripting)</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Filtered/escaped reflected, no impact.</span>
+  <span class="sev low">🟨 Low: Reflected, works only on old browsers or own input.</span>
+  <span class="sev medium">🟩 Medium: Reflected valid → alert(1) works.</span>
+  <span class="sev high">🟦 High: Stored, affects other users.</span>
+  <span class="sev critical">🟪 Critical: Stored + exfiltrate tokens / sessions.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Test input fields (forms, search, comments). Check reflected responses, cookies, headers. Try event handlers, script tags, DOM injection. Stored XSS often in comment sections, profiles, message boards.
+</div>
+</div>
+
+<div class="vuln">
+<h2>CORS Misconfigurations</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative / N/A: Vector confirmed, no real impact (headers only).</span>
+  <span class="sev low">🟨 Low: Non-sensitive origin, unimportant sites.</span>
+  <span class="sev medium">🟩 Medium: Cross-origin request, no sensitive data.</span>
+  <span class="sev high">🟦 High: Access tokens, real user limited data.</span>
+  <span class="sev critical">🟪 Critical: Cross-site access to admin account or critical data.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check `Access-Control-Allow-Origin` headers. Test with custom domains. Look for misconfigured wildcard `*` with credentials, or sensitive endpoints like `/api/user`, `/settings`.
+</div>
+</div>
+
+<div class="vuln">
+<h2>Open Redirect / URL Redirect</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative / N/A: Redirect endpoint, no real impact.</span>
+  <span class="sev low">🟨 Low: Safe redirect, no user impact.</span>
+  <span class="sev medium">🟩 Medium: Phishing without real data.</span>
+  <span class="sev high">🟦 High: Redirect login, capture token / session.</span>
+  <span class="sev critical">🟪 Critical: Social engineering, account compromise.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Test parameters like `next=`, `url=`, `redirect=`. Use open redirect for phishing or CSRF chaining. Common endpoints: login redirects, payment confirmation pages.
+</div>
+</div>
+
+<div class="vuln">
+<h2>Security Misconfiguration</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative / N/A: Minor info exposure (banner, version).</span>
+  <span class="sev low">🟨 Low: Exposures without real risk.</span>
+  <span class="sev medium">🟩 Medium: Access internal endpoints without privileges.</span>
+  <span class="sev high">🟦 High: Modify sensitive settings / admin panel.</span>
+  <span class="sev critical">🟪 Critical: Full application / server compromise.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check default credentials, exposed admin pages, verbose errors. Review configuration files, headers, and backup endpoints.
+</div>
+</div>
+
+<div class="vuln">
+<h2>Insecure Direct Upload / File Upload</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative / N/A: Upload without impact, non-executable files test.</span>
+  <span class="sev low">🟨 Low: Non-executable files, no impact.</span>
+  <span class="sev medium">🟩 Medium: Files visible to other users, no code execution.</span>
+  <span class="sev high">🟦 High: Files can execute code or steal sessions.</span>
+  <span class="sev critical">🟪 Critical: RCE via uploaded files, full impact.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Test file types, extensions, content-type headers. Upload scripts (PHP, JSP, ASPX) to reachable directories. Check file name normalization, temp directories, and image conversion endpoints.
+</div>
+</div>
+
+<div class="vuln">
+<h2>Authentication / Session Issues</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative / N/A: Error messages or redirects, no real impact.</span>
+  <span class="sev low">🟨 Low: Error messages / incorrect redirect.</span>
+  <span class="sev medium">🟩 Medium: Logout / password reset on test account.</span>
+  <span class="sev high">🟦 High: Access other users' accounts via token reuse.</span>
+  <span class="sev critical">🟪 Critical: Compromise real account / admin / API token.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Test session fixation, token reuse, password reset endpoints. Inspect cookies, JWTs, and API tokens. Check for weak session IDs or missing expiry.
+</div>
+</div>
+
+<div class="vuln">
+<h2>🚪 Improper Authorization</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Public endpoint that should not exist, no sensitive data.</span>
+  <span class="sev low">🟨 Low: Access non-critical resources (public profile, non-sensitive settings).</span>
+  <span class="sev medium">🟩 Medium: Modify your own data via simple bypass.</span>
+  <span class="sev high">🟦 High: Access/modify other users' data.</span>
+  <span class="sev critical">🟪 Critical: Access admin functions or massive sensitive data.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check ID manipulation in URLs, API calls, and parameters. Test endpoints without proper token/role checks. Common targets: `/user/{id}`, `/admin/settings`, `/api/data/{id}`.
+</div>
+</div>
+
+<div class="vuln">
+<h2>🔐 Privilege Escalation</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Enumerate roles without direct access.</span>
+  <span class="sev low">🟨 Low: Can see roles but cannot use them.</span>
+  <span class="sev medium">🟩 Medium: Access functions of non-admin users.</span>
+  <span class="sev high">🟦 High: Access limited admin data or functions.</span>
+  <span class="sev critical">🟪 Critical: Gain full control as admin/root.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check role-related endpoints, modify user roles in requests, or attempt privilege upgrade via API. Look for misconfigured RBAC or missing role checks.
+</div>
+</div>
+
+<div class="vuln">
+<h2>🌐 Subdomain Takeover</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Exposed subdomain, but not controllable.</span>
+  <span class="sev low">🟨 Low: Unused subdomain, minimal impact.</span>
+  <span class="sev medium">🟩 Medium: Can host own content but no sensitive data.</span>
+  <span class="sev high">🟦 High: Can perform phishing or steal cookies from domain.</span>
+  <span class="sev critical">🟪 Critical: Full control, compromise users/applications.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check CNAME, NS records. Look for unclaimed services on GitHub, AWS, Azure, Heroku. Deploy malicious content or phishing pages on unclaimed subdomains.
+</div>
+</div>
+
+<div class="vuln">
+<h2>💻 OS Command Injection</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Suspicious parameter, no command execution.</span>
+  <span class="sev low">🟨 Low: Can execute benign commands, no real impact (e.g., ping localhost).</span>
+  <span class="sev medium">🟩 Medium: Extract limited server info.</span>
+  <span class="sev high">🟦 High: Access sensitive data or other processes.</span>
+  <span class="sev critical">🟪 Critical: Full RCE, complete server control.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Check parameters reaching shell commands (`ping`, `convert`, `upload`). Try injection payloads (`;`, `&&`, backticks). Look for unsanitized inputs in system calls, cron scripts, and backend processes.
+</div>
+</div>
+
+<div class="vuln">
+<h2>SSTI (Server-Side Template Injection)</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Vector detected but filtered.</span>
+  <span class="sev low">🟨 Low: Injection causes minor template crash only.</span>
+  <span class="sev medium">🟩 Medium: Can evaluate simple expressions (e.g., 2+2).</span>
+  <span class="sev high">🟦 High: Access server variables, local files.</span>
+  <span class="sev critical">🟪 Critical: Code execution → full RCE.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Test template fields (`{{ }}`, `{% %}`) and look for unsanitized input in user-facing templates. Common endpoints: form inputs, comment sections, profile pages.
+</div>
+</div>
+
+<div class="vuln">
+<h2>Insecure Deserialization</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Only vector found, no impact.</span>
+  <span class="sev low">🟨 Low: Application crash with invalid payload.</span>
+  <span class="sev medium">🟩 Medium: Modify minor data (flags, roles).</span>
+  <span class="sev high">🟦 High: Privilege escalation, access other users’ data.</span>
+  <span class="sev critical">🟪 Critical: Payload → code execution / RCE.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Look for endpoints accepting serialized objects (JSON, XML, PHP, Java). Attempt tampering with object properties to escalate privileges or trigger code execution.
+</div>
+</div>
+
+<div class="vuln">
+<h2>Race Condition</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Only testing timing conditions.</span>
+  <span class="sev low">🟨 Low: Duplicate requests → minor errors.</span>
+  <span class="sev medium">🟩 Medium: Create harmless duplicates (e.g., two messages).</span>
+  <span class="sev high">🟦 High: Duplicate transactions/withdrawals limited.</span>
+  <span class="sev critical">🟪 Critical: Unlimited money transfer / access to infinite resources.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Target endpoints handling transactions, counters, or resource allocation. Use rapid concurrent requests to trigger inconsistent states. Common targets: `/transfer`, `/checkout`, `/api/update`.
+</div>
+</div>
+
+<div class="vuln">
+<h2>Business Logic Flaws</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Strange functionality, no impact.</span>
+  <span class="sev low">🟨 Low: Incorrect discount, minor loss.</span>
+  <span class="sev medium">🟩 Medium: Bypass non-critical restrictions.</span>
+  <span class="sev high">🟦 High: Bypass payment / access unauthorized data.</span>
+  <span class="sev critical">🟪 Critical: Exploit → money transfer / full control.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Analyze workflow and business rules. Test for bypasses in pricing, access control, or transaction logic. Common endpoints: `/checkout`, `/apply-discount`, `/redeem`.
+</div>
+</div>
+
+<div class="vuln">
+<h2>XXE (XML External Entity)</h2>
+<div class="severity">
+  <span class="sev informative">⬜ Informative: Vector detected, no leak.</span>
+  <span class="sev low">🟨 Low: Leak non-sensitive files (logs).</span>
+  <span class="sev medium">🟩 Medium: Access /etc/passwd or simple local files.</span>
+  <span class="sev high">🟦 High: Exfiltrate API keys / DB config.</span>
+  <span class="sev critical">🟪 Critical: XXE → SSRF, RCE, internal system access.</span>
+</div>
+<div class="exploit">
+💡 Exploit Tips: Test XML inputs with DOCTYPE and ENTITY declarations. Check endpoints accepting XML: SOAP APIs, import/export functions, and configuration uploads.
+</div>
+    </div>
