@@ -12,13 +12,20 @@ A comprehensive Bug Bounty reference for web vulnerabilities, including severity
 
 ## How to Use
 
-Open the full Bug Bounty Severity Guide in your browser by clicking the link below:  
+To use the full Bug Bounty Severity Guide, follow these steps:
+
+1. Clone the repository to your local machine or device using this command:  
+   git clone https://github.com/Petre21ip/bug-bounty-severity-guide.git
+
+2. Open the HTML file in your browser:
+   - On a computer, navigate to the cloned folder and double-click `bugbounty_cheatsheet.html`.
+   - On a mobile device, open the file using a browser or a file manager that supports HTML files.
 
 [Open the Bug Bounty Severity Guide HTML](bugbounty_cheatsheet.html)
 
-- Navigate through different vulnerabilities.
-- Use the colored severity boxes to quickly identify impact levels.
-- Follow the exploitation tips for safe testing in Bug Bounty programs.
+3. Navigate through different vulnerabilities.
+4. Use the colored severity boxes to quickly identify impact levels.
+5. Follow the exploitation tips for safe testing in authorized Bug Bounty programs.
 
 ## Topics
 
