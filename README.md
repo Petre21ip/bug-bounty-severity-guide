@@ -12,10 +12,13 @@ A comprehensive Bug Bounty reference for web vulnerabilities, including severity
 
 ## How to Use
 
-1. Open `bug_bounty_severity_guide.html` in your browser.
-2. Navigate through different vulnerabilities.
-3. Use the colored severity boxes to quickly identify impact levels.
-4. Follow the exploitation tips for safe testing in Bug Bounty programs.
+Open the full Bug Bounty Severity Guide in your browser by clicking the link below:  
+
+[Open the Bug Bounty Severity Guide HTML](bug_bounty_severity_guide.html)
+
+- Navigate through different vulnerabilities.
+- Use the colored severity boxes to quickly identify impact levels.
+- Follow the exploitation tips for safe testing in Bug Bounty programs.
 
 ## Topics
 
