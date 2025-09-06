@@ -17,6 +17,12 @@ A comprehensive Bug Bounty reference for web vulnerabilities, including severity
 3. Use the colored severity boxes to quickly identify impact levels.
 4. Follow the exploitation tips for safe testing in Bug Bounty programs.
 
+### Example Screenshot: RCE
+
+![RCE Example](rce_example.png "Screenshot showing RCE example from the HTML reference guide")
+
+**Description:** This screenshot shows the RCE section from the Bug Bounty Severity Guide HTML file. The highlighted area demonstrates how severity levels and exploitation tips are presented. Use this reference responsibly in authorized Bug Bounty programs.
+
 ## Contributing
 
 Feel free to submit pull requests or suggestions to improve the guide. Please ensure any updates are safe and non-malicious.
