@@ -14,7 +14,7 @@ A comprehensive Bug Bounty reference for web vulnerabilities, including severity
 
 Open the full Bug Bounty Severity Guide in your browser by clicking the link below:  
 
-[Open the Bug Bounty Severity Guide HTML](bug_bounty_severity_guide.html)
+[Open the Bug Bounty Severity Guide HTML](bugbounty_cheatsheet.html)
 
 - Navigate through different vulnerabilities.
 - Use the colored severity boxes to quickly identify impact levels.
