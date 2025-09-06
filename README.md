@@ -17,6 +17,10 @@ A comprehensive Bug Bounty reference for web vulnerabilities, including severity
 3. Use the colored severity boxes to quickly identify impact levels.
 4. Follow the exploitation tips for safe testing in Bug Bounty programs.
 
+## Topics
+
+**Tags:** `bug-bounty` `web-security` `vulnerabilities` `security-guide` `cheat-sheet` `pentesting` `XSS` `SQLi` `RCE` `LFI` `IDOR` `CORS` `SSRF` `OS-command-injection`
+
 ### Example Screenshot: RCE
 
 ![RCE Example](rce_example.png "Screenshot showing RCE example from the HTML reference guide")
